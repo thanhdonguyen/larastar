@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return User::latest()->paginate(10);
     }
 
     /**
@@ -27,12 +32,37 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'name' => 'required|string|max:191',
+            'email' => 'required|string|email|max:191|unique:users',
+            'password' => 'required|string|min:6',
+            'password_confirm' => 'required|same:password'
+        ]);
+
+        if($request['photo'] == ''){
+            $photo = 'profile.png';
+        }else{
+            $photo = $request['photo'];
+        }
+
+        if($request['bio'] == ''){
+            $bio = '';
+        }else{
+            $bio = $request['bio'];
+        }
+
+        if($request['type'] == ''){
+            $type = 'user';
+        }else{
+            $type = $request['type'];
+        }
+
         return User::create([
             'name' => $request['name'],
             'email' => $request['email'],
-            'type' => $request['type'],
-            'bio' => $request['bio'],
-            'photo' => $request['photo'],
+            'type' => $type,
+            'bio' => $bio,
+            'photo' => $photo,
             'password' => Hash::make($request['password']),
         ]);
     }
@@ -57,7 +87,19 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $this->validate($request,[
+            'name' => 'required|string|max:191',
+            'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,
+            'password' => 'sometimes|min:6',
+            'password_confirm' => 'sometimes|same:password'
+        ]);
+        if($request['bio'] == ''){
+            $request['bio'] = '';
+        }
+        $user->update($request->all());
+        return ['message' => 'Updated the user info'];
     }
 
     /**
@@ -68,6 +110,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $user->delete();
+
+        // delete the user
+        return['message' => 'User Deleted'];
     }
 }

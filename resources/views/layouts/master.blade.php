@@ -47,7 +47,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <a href="index3.html" class="brand-link">
       <img src="{{ asset('/img/danger.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
-      <span class="brand-text font-weight-light">Lara Start</span>
+      <span class="brand-text font-weight-light">Adminstrator</span>
     </a>
 
     <!-- Sidebar -->
@@ -93,13 +93,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>
           <li class="nav-item">
-                <router-link to="/profile" class="nav-link">
-                    <i class="nav-icon fas fa-user orange"></i>
-                    <p>
-                    Profile
-                    </p>
-                </router-link>
-            </li>
+            <router-link to="/developer" class="nav-link">
+                <i class="nav-icon fas fa-cogs"></i>
+                <p>
+                Developer
+                </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/profile" class="nav-link">
+                <i class="nav-icon fas fa-user orange"></i>
+                <p>
+                Profile
+                </p>
+            </router-link>
+          </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('logout') }}"
                     onclick="event.preventDefault();
@@ -133,6 +141,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="content">
       <div class="container-fluid">
             <router-view></router-view>
+            <vue-progress-bar></vue-progress-bar>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
